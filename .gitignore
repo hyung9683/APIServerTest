@@ -128,3 +128,5 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+project_react/public/bldg_poly.geojson
+project_react/public/bldg_poly.qmd
