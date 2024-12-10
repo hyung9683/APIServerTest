@@ -2,7 +2,10 @@ import { useEffect } from "react";
 import mapboxgl from 'mapbox-gl';
 import MapboxLanguage from '@mapbox/mapbox-gl-language';
 
-mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+// mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+mapboxgl.accessToken = process.env.VITE_MAPBOX_ACCESS_TOKEN;
+
+//https://sung-98.tistory.com/114
 
 const useMap = (mapContainerRef, style, config) => {
 
@@ -28,7 +31,7 @@ const useMap = (mapContainerRef, style, config) => {
         const loadGeoJson = async () => {
 
             try {
-                const response = await fetch();
+                const response = await fetch('/bldg_poly.geojson');
                 const geojson = await response.json();
 
                 map.addSource('polygons', {
@@ -42,7 +45,7 @@ const useMap = (mapContainerRef, style, config) => {
                     source: 'polygons',
                     paint: {
                         'fill-color': '#888888',
-                        'fill-opacity' : '0.4'
+                        'fill-opacity' : 0.4
                     }
                 })
 
