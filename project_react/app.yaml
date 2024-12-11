@@ -4,11 +4,12 @@ instance_class: F1
 
 env_variables:
   NODE_ENV: 'production'
+  PORT: 8080
   CLOUD_HOST: ${CLOUD_HOST}
   CLOUDSQL_PORT: ${CLOUDSQL_PORT}
   CLOUDSQL_DB: ${CLOUDSQL_DB}
   CLOUDSQL_USER_CODELAB: ${CLOUDSQL_USER_CODELAB}
-  CLOUDESQL_PASS_CODELAB: ${CLOUDESQL_PASS_CODELAB}
+  CLOUDSQL_PASS_CODELAB: ${CLOUDSQL_PASS_CODELAB}
   CODELAB_SCHEMA: ${CODELAB_SCHEMA}
   DB_ROOT_CERT: certs/server-ca.pem
   DB_KEY: certs/client-key.pem
@@ -20,12 +21,17 @@ handlers:
    script: auto
    secure: always
 
+ - url: /bldg_map
+   static_files: dist/index.html
+   upload: dist/index.html
+   secure: always
+
 
  - url: /
    static_files: dist/index.html
    upload: dist/index.html
 
- - url: /(.*\.(geojson|json|js|css|html|ico|png|jpg|jpeg|gif|svg|webp))$
+ - url: /(.*\.(geojson|json|js|css|html|ico|png|jpg|jpeg|gif|svg|webp))
    static_files: dist/\1
    upload: dist/(.*\.(geojson|json|js|css|html|ico|png|jpg|jpeg|gif|svg|webp))$
    secure: always

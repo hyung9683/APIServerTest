@@ -76,7 +76,7 @@ const useMap = (mapContainerRef, style, config) => {
 
             try {
                 
-                const response = await fetch(`http://localhost:8080/bldg/bldg_map` ? ' http://localhost:8080/bldg/bldg_map' : 'https://react-annhyung-dot-winged-woods-442503-f1.du.r.appspot.com/bldg_map');
+                const response = await fetch(`http://localhost:8080/bldg/bldg_map`);
 
                
                 

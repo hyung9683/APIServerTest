@@ -22,13 +22,26 @@ const app = express();
 
 
 const corsOptions = {
-    origin : process.env.NODE_ENV === 'production' ? ['https://react-annhyung-dot-winged-woods-442503-f1.du.r.appspot.com/bldg_map'] : 'http://localhost:5173',
-    credentials : true,
-    allowedHeaders : ['Content-Type', 'Authorization'],
-};
+    origin : process.env.NODE_ENV === 'production' ? 'https://react-annhyung-dot-winged-woods-442503-f1.du.r.appspot.com' : 'http://localhost:5173',
+    credentials : true
+}
+
+
 
 // 프런트와 연결
 app.use(cors(corsOptions));
+
+//gpt보고 다시 수정하기
+app.use((req, res, next) => {
+    const origin = req.headers.origin || req.hostname;
+
+    if (origin === 'https://react-annhyung-dot-winged-woods-442503-f1.du.r.appspot.com') {
+        process.env.NODE_ENV = 'production';
+    } else {
+        process.env.NODE_ENV = 'development';
+    }
+    next();
+});
 
 app.use(express.json());
 
