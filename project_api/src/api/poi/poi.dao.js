@@ -1,53 +1,41 @@
-import {db} from '../../config/dbConfig.js';
-import {query} from '../../db/query.js';
+import {db, schema} from '../../config/dbConfig.js';
+// import {query} from '../../db/query.js';
 
 
-const getPoibyLotnoSearch = async (req, res) => {
+const getPoibyLotnoSearch = async (lotno_addr) => {
 
-    const lotno_addr = String(req.body.lotno_addr);
-    const LotnoQuery = query.getPoiByLotnoSearch;
+    
+    const query = `SELECT st_astext(geom) as geom, * from ${schema}.poi WHERE lotno_addr like '%' || $1 || '%'`;
    
 
     try {
 
-        const result = await db.query(LotnoQuery, [lotno_addr]);
+        const result = await db.query(query, [lotno_addr]);
 
-        res.status(200).json({
-            success : true,
-            message : 'Lotno_addr search success',
-            data : result.rows
-        })
 
         return result.rows;
 
     } catch (error) {
 
-        console.error('Error DAO getPoiByLotnoSerch', error);
+        console.error('Error DAO getPoiByLotnoSearch', error);
         
         throw new Error(error.message);
     }
 }
 
-const getPoibyRoadSearch = async (req, res) => {
+const getPoibyRoadSearch = async (road_nm_addr) => {
 
-    const road_nm_addr = String(req.body.road_nm_addr);
-    const RoadQuery = query.getPoiByRoadSearch;
+    
+    const query = `SELECT st_astext(geom) as geom, * from ${schema}.poi WHERE road_nm_addr like '%' || $1 || '%'`;
 
     try {
 
-        const result = await db.query(RoadQuery, [road_nm_addr]);
+        const result = await db.query(query, [road_nm_addr]);
 
-        res.status(200).json({
-            success : true,
-            message : 'Road_nm_addr search success',
-            data : result.rows
-        })
-
-        return result.rows;
 
     } catch(error) {
 
-        console.error('Error DAO getPoiByRoadSerch', error);
+        console.error('Error DAO getPoiByRoadSearch', error);
 
         throw new Error(error.message);
         

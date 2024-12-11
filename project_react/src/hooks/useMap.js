@@ -1,9 +1,11 @@
 import { useEffect } from "react";
 import mapboxgl from 'mapbox-gl';
 import MapboxLanguage from '@mapbox/mapbox-gl-language';
+import wellknown from 'wellknown';
 
-// mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
-mapboxgl.accessToken = process.env.VITE_MAPBOX_ACCESS_TOKEN;
+
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+// mapboxgl.accessToken = process.env.VITE_MAPBOX_ACCESS_TOKEN;
 
 //https://sung-98.tistory.com/114
 
@@ -22,6 +24,48 @@ const useMap = (mapContainerRef, style, config) => {
             zoom: config.initialZoom,
         })
 
+        const removeBuildingLayers = () => {
+
+            if(map.getLayer('buildings')) {
+
+                map.removeLayer('buildings');
+            }
+
+            if(map.getLayer('3d-buildings')) {
+
+                map.removeLayer('3d-buildings');
+            }
+
+            if(map.getLayer('building')) {
+
+                map.removeLayer('building');
+            }
+
+            const buildingLayers = [
+                'building-number-label',
+                'building-extrusion',
+                'building-outline'
+            ];
+
+            buildingLayers.forEach(layer => {
+                if(map.getLayer(layer)) {
+
+                    map.removeLayer(layer);
+                }
+            });
+        }
+
+        if (map.loaded()) {
+
+            removeBuildingLayers();
+        } else {
+
+            map.on('load', () => {
+                removeBuildingLayers();
+                loadGeoJson();
+            });
+        }
+
         const language = new MapboxLanguage({
 
             defaultLanguage : config.defaultLanguage,
@@ -31,13 +75,60 @@ const useMap = (mapContainerRef, style, config) => {
         const loadGeoJson = async () => {
 
             try {
-                const response = await fetch('/bldg_poly.geojson');
-                const geojson = await response.json();
+                
+                const response = await fetch(`http://localhost:8080/bldg/bldg_map` ? ' http://localhost:8080/bldg/bldg_map' : 'https://react-annhyung-dot-winged-woods-442503-f1.du.r.appspot.com/bldg_map');
+
+               
+                
+
+                if (!response.ok) {
+
+                    console.log(response);
+                    
+                    throw new Error('Error Loading Polygon Data')
+
+                } 
+                
+
+                const result = await response.json();
+
+                console.log('서버 응답:', result.data);
+
+                if(!Array.isArray(result.data)) {
+                    console.error('데이터 배열이 아닙니다.', result);
+
+                    return;
+                }
+
+
+                const geojson = {
+                    type : 'FeatureCollection',
+                    features : result.data.map(item => ({
+                        type: 'Feature',
+                        geometry : wellknown.parse(item.geom),
+                        properties : {
+                            bldg_id : item.bldg_id,
+                            bldg_sn : item.bldg_sn,
+                            rds_sn : item.rds_sn,
+                            sig_cd : item.sig_cd,
+                            emd_cd : item.emd_cd,
+                            lotno_addr : item.lotno_addr,
+                            road_nm_addr : item.road_nm_addr,
+                            bldg_nm : item.bldg_nm,
+                            gro_flo_co : item.gro_flo_co,
+                            und_flo_co : item.und_flo_co,
+                            bdtyp_cd : item.bdtyp_cd,
+                            crt_dt : item.crt_dt,
+                            mdfcn_dt : item.mdfcn_dt,
+                            recent_poi_dtl_crt_dt : item.recent_poi_dtl_crt_dt,
+                        }
+                    }))
+                };
 
                 map.addSource('polygons', {
                     type: 'geojson',
-                    data: geojson,
-                })
+                    data : geojson,
+                });
 
                 map.addLayer({
                     id: 'polygon-layer',
@@ -45,7 +136,7 @@ const useMap = (mapContainerRef, style, config) => {
                     source: 'polygons',
                     paint: {
                         'fill-color': '#888888',
-                        'fill-opacity' : 0.4
+                        'fill-opacity': 0.4
                     }
                 })
 
@@ -70,3 +161,6 @@ const useMap = (mapContainerRef, style, config) => {
 }
 
 export default useMap;
+
+
+

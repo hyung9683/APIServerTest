@@ -1,17 +1,32 @@
 service: react-annhyung
 runtime: nodejs20
 instance_class: F1
+
 env_variables:
- PORT: 8080
- NODE_ENV: production
+  NODE_ENV: 'production'
+  CLOUD_HOST: ${CLOUD_HOST}
+  CLOUDSQL_PORT: ${CLOUDSQL_PORT}
+  CLOUDSQL_DB: ${CLOUDSQL_DB}
+  CLOUDSQL_USER_CODELAB: ${CLOUDSQL_USER_CODELAB}
+  CLOUDESQL_PASS_CODELAB: ${CLOUDESQL_PASS_CODELAB}
+  CODELAB_SCHEMA: ${CODELAB_SCHEMA}
+  DB_ROOT_CERT: certs/server-ca.pem
+  DB_KEY: certs/client-key.pem
+  DB_CERT: certs/client-cert.pem
+  PRIVATE_IP: TRUE
 
 handlers:
+ - url: /api/.*
+   script: auto
+   secure: always
+
+
  - url: /
    static_files: dist/index.html
    upload: dist/index.html
 
- - url: /(.*)
+ - url: /(.*\.(geojson|json|js|css|html|ico|png|jpg|jpeg|gif|svg|webp))$
    static_files: dist/\1
-   upload: dist/(.*)
-
+   upload: dist/(.*\.(geojson|json|js|css|html|ico|png|jpg|jpeg|gif|svg|webp))$
+   secure: always
 

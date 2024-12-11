@@ -4,8 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "set NODE_OPTIONS=--no-warnings && nodemon src/app.js",
-    "start": "node src/app.js"
+    "dev": "set NODE_OPTIONS=--no-warnings && nodemon src/bin/www.js",
+    "start": "node src/bin/www.js"
   },
   "type": "module",
   "author": "",
@@ -29,6 +29,7 @@
     "axios": "^1.7.2",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "express": "^4.19.2",
     "express-basic-auth": "^1.2.1",
     "firebase-admin": "^12.6.0",

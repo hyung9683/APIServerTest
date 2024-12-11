@@ -1,0 +1,18 @@
+app.yaml
+
+gcloud app deploy  -- app engine 배포
+
+
+
+
+도어스캐너 => 앱
+
+app.yaml 원래 정적 경로
+
+- url: /(.*)
+   static_files: dist/\1
+   upload: dist/(.*)
+
+
+
+https://cloud.google.com/endpoints/docs/openapi/configure-endpoints?hl=ko - api 구성 및 배포

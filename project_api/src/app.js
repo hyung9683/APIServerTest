@@ -7,20 +7,28 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
 
-// 프런트와 연결
-app.use(cors({
-    origin : 'http://localhost:5173',
-    credentials : true
-}));
+
 
 
 // 파일 경로 설정
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+
 const {mountRoutes} = routes;
 
 const app = express();
+
+
+
+const corsOptions = {
+    origin : process.env.NODE_ENV === 'production' ? ['https://react-annhyung-dot-winged-woods-442503-f1.du.r.appspot.com/bldg_map'] : 'http://localhost:5173',
+    credentials : true,
+    allowedHeaders : ['Content-Type', 'Authorization'],
+};
+
+// 프런트와 연결
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
@@ -39,22 +47,37 @@ if (!fs.existsSync(Path)) {
 
 app.use('/public', express.static(Path));
 
+const Dist = path.join(__dirname, '../../project_react/dist');
 
+app.use(express.static(Dist));
 
 
 mountRoutes(app);
 
+app.get('/', async(req, res) => {
+
+    res.send('CodLab Cloud Run APi Server');
+    
+})
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(Dist,'index.html'));
+});
+
+
+
+
+
+
 
 // 포트 설정
-const PORT = process.env.PORT || '8080';
+// const PORT = process.env.PORT || '8080';
 
-app.listen(PORT, () => {
+// app.listen(PORT, () => {
     
-   console.log(`Listening on port ${PORT}`);
-})
+//    console.log(`Listening on port ${PORT}`);
+// })
 
-app.get('/', async(req, res) => {
-    res.send('CodLab Cloud Run APi Server')
-})
+
 
 export default app;

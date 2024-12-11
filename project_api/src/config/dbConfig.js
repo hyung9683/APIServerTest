@@ -1,4 +1,7 @@
 import pg from 'pg';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const dbConfig = {
     host : process.env.CLOUD_HOST,
@@ -7,6 +10,8 @@ const dbConfig = {
     user : process.env.CLOUDSQL_USER_CODELAB,
     password : process.env.CLOUDESQL_PASS_CODELAB,
 };
+
+
 
 export const db = new pg.Pool(dbConfig);
 export const schema = process.env.CODELAB_SCHEMA;

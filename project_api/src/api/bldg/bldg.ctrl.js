@@ -1,6 +1,7 @@
 import bldgDao from './bldg.dao.js';
 
 const getBldgByMap = async (req, res) => {
+    
 
     if(!bldgDao.getBldgByMap()) {
 
