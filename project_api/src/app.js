@@ -22,9 +22,13 @@ const app = express();
 
 
 const corsOptions = {
-    origin : process.env.NODE_ENV === 'production' ? 'https://react-annhyung-dot-winged-woods-442503-f1.du.r.appspot.com' : 'http://localhost:5173',
+    origin : ['https://react-annhyung-dot-winged-woods-442503-f1.du.r.appspot.com', 'http://localhost:5173'],
     credentials : true
+    
 }
+
+console.log(corsOptions.origin);
+
 
 
 
@@ -32,16 +36,16 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 //gpt보고 다시 수정하기
-app.use((req, res, next) => {
-    const origin = req.headers.origin || req.hostname;
+// app.use((req, res, next) => {
+//     const origin = req.headers.origin || req.hostname;
 
-    if (origin === 'https://react-annhyung-dot-winged-woods-442503-f1.du.r.appspot.com') {
-        process.env.NODE_ENV = 'production';
-    } else {
-        process.env.NODE_ENV = 'development';
-    }
-    next();
-});
+//     if (origin === 'https://react-annhyung-dot-winged-woods-442503-f1.du.r.appspot.com') {
+//         process.env.NODE_ENV = 'production';
+//     } else {
+//         process.env.NODE_ENV = 'development';
+//     }
+//     next();
+// });
 
 app.use(express.json());
 
@@ -51,31 +55,42 @@ app.use(compression());
 
 
 // 폴더가 없으면 생성
-const Path = path.join(__dirname, 'public');
+// const Path = path.join(__dirname, 'public');
 
-if (!fs.existsSync(Path)) {
+const Path = process.env.NODE_ENV === 'production' ? path.join(__dirname, 'public') : path.join(__dirname, 'public');
 
-    fs.mkdirSync(Path, {  recursive: true });
-}
+
+console.log('Current Working Directory:', process.cwd());
+console.log('Resolved Path:', Path);
+
+
+// if (!fs.existsSync(Path)) {
+
+//     fs.mkdirSync(Path, {  recursive: true });
+// }
+
+console.log('File exists:', fs.existsSync(Path));
+
 
 app.use('/public', express.static(Path));
+// app.use(express.static(Path));
 
-const Dist = path.join(__dirname, '../../project_react/dist');
+const distPath = path.join(__dirname, 'dist');
 
-app.use(express.static(Dist));
+app.use(express.static(distPath));
 
 
 mountRoutes(app);
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(distPath,'index.html'));
+});
 
 app.get('/', async(req, res) => {
 
     res.send('CodLab Cloud Run APi Server');
     
 })
-
-app.get('*', (req, res) => {
-    res.sendFile(path.join(Dist,'index.html'));
-});
 
 
 
