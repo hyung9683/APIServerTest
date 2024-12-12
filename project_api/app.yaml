@@ -18,15 +18,11 @@ env_variables:
   PRIVATE_IP: TRUE
 
 handlers:
+
  - url: /.*
    script: auto
    secure: always
- 
- - url: /public
-   static_dir: /src/public
 
- - url: /dist
-   static_dir: /src/dist
 
 
 

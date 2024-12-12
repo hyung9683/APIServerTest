@@ -55,9 +55,11 @@ app.use(compression());
 
 
 // 폴더가 없으면 생성
-// const Path = path.join(__dirname, 'public');
+const Path = path.join(__dirname, 'public');
 
-const Path = process.env.NODE_ENV === 'production' ? path.join(__dirname, 'public') : path.join(__dirname, 'public');
+app.use('/public', express.static(Path));
+
+// const Path = process.env.NODE_ENV === 'production' ? path.join(__dirname, 'src', 'public') : path.join(__dirname, 'public');
 
 
 console.log('Current Working Directory:', process.cwd());
@@ -71,8 +73,6 @@ console.log('Resolved Path:', Path);
 
 console.log('File exists:', fs.existsSync(Path));
 
-
-app.use('/public', express.static(Path));
 // app.use(express.static(Path));
 
 const distPath = path.join(__dirname, 'dist');
@@ -82,15 +82,16 @@ app.use(express.static(distPath));
 
 mountRoutes(app);
 
+app.get('/', async(req, res) => {
+
+    res.json({message : 'CodLab Cloud Run APi Server'});
+    
+})
+
 app.get('*', (req, res) => {
     res.sendFile(path.join(distPath,'index.html'));
 });
 
-app.get('/', async(req, res) => {
-
-    res.send('CodLab Cloud Run APi Server');
-    
-})
 
 
 
