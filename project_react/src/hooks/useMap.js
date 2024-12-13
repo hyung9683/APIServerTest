@@ -75,9 +75,10 @@ const useMap = (mapContainerRef, style, config) => {
         const loadGeoJson = async () => {
 
             try {
-                const API_URL = import.meta.env.MODE === 'production' ? 'https://node-annhyung-dot-winged-woods-442503-f1.du.r.appspot.com' : 'http://localhost:8080';
+                // const API_URL = import.meta.env.MODE === 'production' ? 'https://node-annhyung-dot-winged-woods-442503-f1.du.r.appspot.com' : 'http://localhost:8080';
+                const API_URL = import.meta.env.VITE_API_URL
                 
-                const response = await fetch(`${API_URL}/bldg/bldg_map`);
+                const response = await fetch(`${VITE_API_URL}/bldg/bldg_map`);
 
                 console.log('현재 주소:',response);
                 

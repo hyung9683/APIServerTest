@@ -6,7 +6,7 @@ entrypoint: node src/bin/www.js
 env_variables:
   NODE_ENV: 'production'
   PORT: 8080
-  CLOUD_HOST: '34.64.248.193'
+  CLOUD_HOST: /cloudsql/winged-woods-442503-f1:asia-northeast3:codelab
   CLOUDSQL_PORT: 5432
   CLOUDSQL_DB: 'postgres'
   CLOUDSQL_USER_CODELAB: 'codelab'
@@ -18,10 +18,15 @@ env_variables:
   PRIVATE_IP: TRUE
 
 handlers:
+ - url: /bldg/.*
+   script: auto
+   secure: always
 
  - url: /.*
    script: auto
    secure: always
+
+ 
 
 
 

@@ -6,6 +6,7 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
+import logger from './error/logger.js';
 
 
 
@@ -80,13 +81,15 @@ const distPath = path.join(__dirname, 'dist');
 app.use(express.static(distPath));
 
 
-mountRoutes(app);
 
 app.get('/', async(req, res) => {
 
     res.json({message : 'CodLab Cloud Run APi Server'});
     
 })
+
+mountRoutes(app);
+
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(distPath,'index.html'));
